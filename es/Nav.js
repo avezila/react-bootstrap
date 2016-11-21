@@ -350,4 +350,4 @@ Nav.propTypes = propTypes;
 Nav.defaultProps = defaultProps;
 Nav.contextTypes = contextTypes;
 
-export default bsClass('nav', bsStyles(['tabs', 'pills', 'nav nav-tabs-google'], Nav));
+export default bsClass('nav', bsStyles(['tabs', 'pills', 'tabs nav-tabs-google'], Nav));
