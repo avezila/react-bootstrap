@@ -344,5 +344,5 @@ Nav.defaultProps = defaultProps;
 Nav.contextTypes = contextTypes;
 
 export default bsClass('nav',
-  bsStyles(['tabs', 'pills', 'tabs-google'], Nav)
+  bsStyles(['tabs', 'pills', 'nav nav-tabs-google'], Nav)
 );
