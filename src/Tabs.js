@@ -22,13 +22,13 @@ const propTypes = {
   /**
    * Navigation style
    */
-  bsStyle: React.PropTypes.oneOf(['tabs', 'pills']),
+  bsStyle: React.PropTypes.string,
 
   animation: React.PropTypes.bool,
 
-  id: requiredForA11y(React.PropTypes.oneOfType([
+  id: React.PropTypes.oneOfType([
     React.PropTypes.string, React.PropTypes.number,
-  ])),
+  ]),
 
   /**
    * Callback fired when a Tab is selected.
