@@ -15,24 +15,22 @@ var propTypes = {
    * HTML id attribute, required if no `generateChildId` prop
    * is specified.
    */
-  id: function id(props) {
-    var error = null;
-
-    if (!props.generateChildId) {
-      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        args[_key - 1] = arguments[_key];
-      }
-
-      error = idPropType.apply(undefined, [props].concat(args));
-
-      if (!error && !props.id) {
-        error = new Error('In order to properly initialize Tabs in a way that is accessible ' + 'to assistive technologies (such as screen readers) an `id` or a ' + '`generateChildId` prop to TabContainer is required');
+  /* id(props, ...args) {
+    let error = null;
+     if (!props.generateChildId) {
+      error = idPropType(props, ...args);
+       if (!error && !props.id) {
+        error = new Error(
+          'In order to properly initialize Tabs in a way that is accessible ' +
+          'to assistive technologies (such as screen readers) an `id` or a ' +
+          '`generateChildId` prop to TabContainer is required'
+        );
       }
     }
+     return error;
+  }, */
 
-    return error;
-  },
-
+  id: PropTypes.string,
 
   /**
    * A function that takes an `eventKey` and `type` and returns a unique id for

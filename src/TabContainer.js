@@ -13,7 +13,7 @@ const propTypes = {
    * HTML id attribute, required if no `generateChildId` prop
    * is specified.
    */
-  id(props, ...args) {
+  /* id(props, ...args) {
     let error = null;
 
     if (!props.generateChildId) {
@@ -29,7 +29,9 @@ const propTypes = {
     }
 
     return error;
-  },
+  }, */
+
+  id: PropTypes.string,
 
   /**
    * A function that takes an `eventKey` and `type` and returns a unique id for
