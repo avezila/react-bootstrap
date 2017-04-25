@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactTestUtils from 'react/lib/ReactTestUtils';
+import ReactTestUtils from 'react-addons-test-utils';
 import ReactDOM from 'react-dom';
 
 import Fade from '../src/Fade';
@@ -10,7 +10,7 @@ describe('Fade', () => {
 
   beforeEach(() => {
 
-    Component = React.createClass({
+    Component = class extends React.Component {
       render() {
         let { children, ...props } = this.props;
 
@@ -24,7 +24,7 @@ describe('Fade', () => {
           </Fade>
         );
       }
-    });
+    };
   });
 
   it('Should default to hidden', () => {

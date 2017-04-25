@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactTestUtils from 'react/lib/ReactTestUtils';
+import ReactTestUtils from 'react-addons-test-utils';
 import ReactDOM from 'react-dom';
 
 import Collapse from '../src/Collapse';
@@ -10,7 +10,7 @@ describe('<Collapse>', () => {
 
   beforeEach(() => {
 
-    Component = React.createClass({
+    Component = class extends React.Component {
       render() {
         let { children, ...props } = this.props;
 
@@ -29,7 +29,7 @@ describe('<Collapse>', () => {
           </Collapse>
         );
       }
-    });
+    };
   });
 
   it('Should default to collapsed', () => {

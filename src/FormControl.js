@@ -1,22 +1,33 @@
 import classNames from 'classnames';
 import React from 'react';
+import PropTypes from 'prop-types';
 import elementType from 'react-prop-types/lib/elementType';
 import warning from 'warning';
 
 import FormControlFeedback from './FormControlFeedback';
 import FormControlStatic from './FormControlStatic';
-import { bsClass, getClassSet, splitBsProps } from './utils/bootstrapUtils';
+import { bsClass, getClassSet, splitBsProps, bsSizes } from './utils/bootstrapUtils';
+import { SIZE_MAP, Size } from './utils/StyleConfig';
+import { prefix } from './utils/bootstrapUtils';
 
 const propTypes = {
   componentClass: elementType,
   /**
    * Only relevant if `componentClass` is `'input'`.
    */
-  type: React.PropTypes.string,
+  type: PropTypes.string,
   /**
    * Uses `controlId` from `<FormGroup>` if not explicitly specified.
    */
-  id: React.PropTypes.string,
+  id: PropTypes.string,
+  /**
+   * Attaches a ref to the `<input>` element. Only functions can be used here.
+   *
+   * ```js
+   * <FormControl inputRef={ref => { this.input = ref; }} />
+   * ```
+   */
+  inputRef: PropTypes.func,
 };
 
 const defaultProps = {
@@ -24,7 +35,7 @@ const defaultProps = {
 };
 
 const contextTypes = {
-  $bs_formGroup: React.PropTypes.object,
+  $bs_formGroup: PropTypes.object,
 };
 
 class FormControl extends React.Component {
@@ -36,7 +47,9 @@ class FormControl extends React.Component {
       componentClass: Component,
       type,
       id = controlId,
+      inputRef,
       className,
+      bsSize,
       ...props
     } = this.props;
 
@@ -53,11 +66,19 @@ class FormControl extends React.Component {
       classes = getClassSet(bsProps);
     }
 
+    // If user provides a size, make sure to append it to classes as input-
+    // e.g. if bsSize is small, it will append input-sm
+    if (bsSize) {
+      const size = SIZE_MAP[bsSize] || bsSize;
+      classes[prefix({ bsClass: 'input' }, size)] = true;
+    }
+
     return (
       <Component
         {...elementProps}
         type={type}
         id={id}
+        ref={inputRef}
         className={classNames(className, classes)}
       />
     );
@@ -71,4 +92,6 @@ FormControl.contextTypes = contextTypes;
 FormControl.Feedback = FormControlFeedback;
 FormControl.Static = FormControlStatic;
 
-export default bsClass('form-control', FormControl);
+export default bsClass('form-control',
+  bsSizes([Size.SMALL, Size.LARGE], FormControl)
+);

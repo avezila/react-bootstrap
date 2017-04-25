@@ -1,6 +1,6 @@
 import keycode from 'keycode';
 import React from 'react';
-import ReactTestUtils from 'react/lib/ReactTestUtils';
+import ReactTestUtils from 'react-addons-test-utils';
 import tsp from 'teaspoon';
 
 import Nav from '../src/Nav';
@@ -186,6 +186,52 @@ describe('<Nav>', () => {
 
       expect(instance[0].props.activeKey).to.equal(5);
       expect(document.activeElement).to.equal(anchors[4]);
+    });
+  });
+
+  describe('event keys', () => {
+    it('should accept any number as an event key', () => {
+      let instance;
+      let selectSpy = sinon.spy(activeKey => instance.props({ activeKey }));
+      instance = tsp(
+        <Nav activeKey={-100} onSelect={selectSpy} role="tablist">
+          <NavItem eventKey={-100}>NavItem 1 content</NavItem>
+          <NavItem eventKey={0}>NavItem 2 content</NavItem>
+          <NavItem eventKey={1}>NavItem 3 content</NavItem>
+        </Nav>
+      ).render(true);
+
+      const anchors = instance.find('a').dom();
+      anchors[0].focus();
+
+      ReactTestUtils.Simulate.keyDown(anchors[0], { keyCode: keycode('right') });
+
+      expect(instance[0].props.activeKey).to.equal(0);
+      expect(document.activeElement).to.equal(anchors[1]);
+
+      instance.unmount();
+    });
+
+    it('should accept any string as an event key', () => {
+      let instance;
+      let selectSpy = sinon.spy(activeKey => instance.props({ activeKey }));
+      instance = tsp(
+        <Nav activeKey={''} onSelect={selectSpy} role="tablist">
+          <NavItem eventKey={'a'}>NavItem 1 content</NavItem>
+          <NavItem eventKey={'b'}>NavItem 2 content</NavItem>
+          <NavItem eventKey={''}>NavItem 3 content</NavItem>
+        </Nav>
+      ).render(true);
+
+      const anchors = instance.find('a').dom();
+      anchors[2].focus();
+
+      ReactTestUtils.Simulate.keyDown(anchors[2], { keyCode: keycode('right') });
+
+      expect(instance[0].props.activeKey).to.equal('a');
+      expect(document.activeElement).to.equal(anchors[0]);
+
+      instance.unmount();
     });
   });
 

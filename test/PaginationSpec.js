@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactTestUtils from 'react/lib/ReactTestUtils';
+import ReactTestUtils from 'react-addons-test-utils';
 
 import Pagination from '../src/Pagination';
 
@@ -100,6 +100,40 @@ describe('<Pagination>', () => {
     assert.equal(pageButtons[3].textContent, '…');
     assert.equal(pageButtons[7].textContent, '…');
     assert.equal(pageButtons[8].textContent, '20');
+  });
+
+  it('should not render ellipsis with boundaryLinks near start', () => {
+    const instance = ReactTestUtils.renderIntoDocument(
+      <Pagination
+        first
+        last
+        prev
+        next
+        boundaryLinks
+        maxButtons={5}
+        activePage={4}
+        items={20}
+      />
+    );
+    const pageButtons = ReactTestUtils.scryRenderedDOMComponentsWithTag(instance, 'li');
+    assert.equal(pageButtons[3].textContent, '2');
+  });
+
+  it('should not render ellipsis with boundaryLinks near end', () => {
+    const instance = ReactTestUtils.renderIntoDocument(
+      <Pagination
+        first
+        last
+        prev
+        next
+        boundaryLinks
+        maxButtons={5}
+        activePage={17}
+        items={20}
+      />
+    );
+    const pageButtons = ReactTestUtils.scryRenderedDOMComponentsWithTag(instance, 'li');
+    assert.equal(pageButtons[pageButtons.length - 4].textContent, '19');
   });
 
   it('should show the ellipsis, first, last, prev and next button with custom labels', () => {

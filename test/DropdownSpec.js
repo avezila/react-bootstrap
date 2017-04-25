@@ -1,6 +1,6 @@
 import keycode from 'keycode';
 import React from 'react';
-import ReactTestUtils from 'react/lib/ReactTestUtils';
+import ReactTestUtils from 'react-addons-test-utils';
 import ReactDOM from 'react-dom';
 import tsp from 'teaspoon';
 
@@ -523,6 +523,107 @@ describe('<Dropdown>', () => {
       // simulating a tab event doesn't actually shift focus.
       // at least that seems to be the case according to SO.
       // hence no assert on the input having focus.
+    });
+  });
+
+  describe('DOM event and source passed to onToggle', () => {
+    let focusableContainer;
+
+    beforeEach(() => {
+      focusableContainer = document.createElement('div');
+      document.body.appendChild(focusableContainer);
+    });
+
+    afterEach(() => {
+      ReactDOM.unmountComponentAtNode(focusableContainer);
+      document.body.removeChild(focusableContainer);
+    });
+
+    it('passes open, event, and source correctly when opened with click', () => {
+      const spy = sinon.spy();
+      const instance = ReactTestUtils.renderIntoDocument(
+        <Dropdown id="test-id" onToggle={spy}>
+          {dropdownChildren}
+        </Dropdown>
+      );
+      const buttonNode = ReactTestUtils.findRenderedDOMComponentWithTag(instance, 'BUTTON');
+
+      expect(spy).to.not.have.been.called;
+
+      ReactTestUtils.Simulate.click(buttonNode);
+
+      expect(spy).to.have.been.calledOnce;
+      expect(spy.getCall(0).args.length).to.equal(3);
+      expect(spy.getCall(0).args[0]).to.equal(true);
+      expect(spy.getCall(0).args[1]).to.be.an('object');
+      assert.deepEqual(spy.getCall(0).args[2], { source: 'click' });
+    });
+
+    it('passes open, event, and source correctly when closed with click', () => {
+      const spy = sinon.spy();
+      const instance = ReactTestUtils.renderIntoDocument(
+        <Dropdown id="test-id" onToggle={spy}>
+          {dropdownChildren}
+        </Dropdown>
+      );
+      const buttonNode = ReactTestUtils.findRenderedDOMComponentWithTag(instance, 'BUTTON');
+
+      expect(spy).to.not.have.been.called;
+      ReactTestUtils.Simulate.click(buttonNode);
+      expect(spy).to.have.been.calledOnce;
+      ReactTestUtils.Simulate.click(buttonNode);
+
+      expect(spy).to.have.been.calledTwice;
+      expect(spy.getCall(1).args.length).to.equal(3);
+      expect(spy.getCall(1).args[0]).to.equal(false);
+      expect(spy.getCall(1).args[1]).to.be.an('object');
+      assert.deepEqual(spy.getCall(1).args[2], { source: 'click' });
+    });
+
+    it('passes open, event, and source correctly when child selected', () => {
+      const spy = sinon.spy();
+      const instance = ReactTestUtils.renderIntoDocument(
+        <Dropdown id="test-id" onToggle={spy}>
+          <Dropdown.Toggle key="toggle">
+            Child Title
+          </Dropdown.Toggle>
+          <Dropdown.Menu key="menu">
+            <MenuItem eventKey={1}>Item 1</MenuItem>
+          </Dropdown.Menu>
+        </Dropdown>
+      );
+      const buttonNode = ReactTestUtils.findRenderedDOMComponentWithTag(instance, 'BUTTON');
+      const childNode = ReactTestUtils.findRenderedDOMComponentWithTag(instance, 'A');
+
+      expect(spy).to.not.have.been.called;
+      ReactTestUtils.Simulate.click(buttonNode);
+      expect(spy).to.have.been.calledOnce;
+
+      ReactTestUtils.Simulate.click(childNode);
+
+      expect(spy).to.have.been.calledTwice;
+      expect(spy.getCall(1).args.length).to.equal(3);
+      expect(spy.getCall(1).args[0]).to.equal(false);
+      expect(spy.getCall(1).args[1]).to.be.an('object');
+      assert.deepEqual(spy.getCall(1).args[2], { source: 'select' });
+    });
+
+    it('passes open, event, and source correctly when opened with keydown', () => {
+      const spy = sinon.spy();
+      const instance = ReactTestUtils.renderIntoDocument(
+        <Dropdown id="test-id" onToggle={spy}>
+          {dropdownChildren}
+        </Dropdown>
+      );
+      const buttonNode = ReactTestUtils.findRenderedDOMComponentWithTag(instance, 'BUTTON');
+
+      ReactTestUtils.Simulate.keyDown(buttonNode, { key: 'Down Arrow', keyCode: 40, which: 40 });
+
+      expect(spy).to.have.been.calledOnce;
+      expect(spy.getCall(0).args.length).to.equal(3);
+      expect(spy.getCall(0).args[0]).to.equal(true);
+      expect(spy.getCall(0).args[1]).to.be.an('object');
+      assert.deepEqual(spy.getCall(0).args[2], { source: 'keydown' });
     });
   });
 
