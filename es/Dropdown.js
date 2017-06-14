@@ -10,9 +10,9 @@ import keycode from 'keycode';
 import React, { cloneElement } from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import all from 'react-prop-types/lib/all';
-import elementType from 'react-prop-types/lib/elementType';
-import isRequiredForA11y from 'react-prop-types/lib/isRequiredForA11y';
+import all from 'prop-types-extra/lib/all';
+import elementType from 'prop-types-extra/lib/elementType';
+import isRequiredForA11y from 'prop-types-extra/lib/isRequiredForA11y';
 import uncontrollable from 'uncontrollable';
 import warning from 'warning';
 
@@ -64,11 +64,6 @@ var propTypes = {
    * @controllable onToggle
    */
   open: PropTypes.bool,
-
-  /**
-   * A callback fired when the Dropdown closes.
-   */
-  onClose: PropTypes.func,
 
   /**
    * A callback fired when the Dropdown wishes to change visibility. Called with the requested
@@ -152,7 +147,7 @@ var Dropdown = function (_React$Component) {
     }
 
     if (!open && prevOpen) {
-      // if focus hasn't already moved from the menu lets return it
+      // if focus hasn't already moved from the menu let's return it
       // to the toggle
       if (this._focusInDropdown) {
         this._focusInDropdown = false;
@@ -256,10 +251,9 @@ var Dropdown = function (_React$Component) {
     var _this3 = this;
 
     var id = _ref.id,
-        onClose = _ref.onClose,
         onSelect = _ref.onSelect,
         rootCloseEvent = _ref.rootCloseEvent,
-        props = _objectWithoutProperties(_ref, ['id', 'onClose', 'onSelect', 'rootCloseEvent']);
+        props = _objectWithoutProperties(_ref, ['id', 'onSelect', 'rootCloseEvent']);
 
     var ref = function ref(c) {
       _this3.menu = c;
@@ -275,7 +269,7 @@ var Dropdown = function (_React$Component) {
       ref: ref,
       labelledBy: id,
       bsClass: prefix(props, 'menu'),
-      onClose: createChainedFunction(child.props.onClose, onClose, this.handleClose),
+      onClose: createChainedFunction(child.props.onClose, this.handleClose),
       onSelect: createChainedFunction(child.props.onSelect, onSelect, function (key, event) {
         return _this3.handleClose(event, { source: 'select' });
       }),
@@ -294,14 +288,13 @@ var Dropdown = function (_React$Component) {
         disabled = _props.disabled,
         pullRight = _props.pullRight,
         open = _props.open,
-        onClose = _props.onClose,
         onSelect = _props.onSelect,
         role = _props.role,
         bsClass = _props.bsClass,
         className = _props.className,
         rootCloseEvent = _props.rootCloseEvent,
         children = _props.children,
-        props = _objectWithoutProperties(_props, ['componentClass', 'id', 'dropup', 'disabled', 'pullRight', 'open', 'onClose', 'onSelect', 'role', 'bsClass', 'className', 'rootCloseEvent', 'children']);
+        props = _objectWithoutProperties(_props, ['componentClass', 'id', 'dropup', 'disabled', 'pullRight', 'open', 'onSelect', 'role', 'bsClass', 'className', 'rootCloseEvent', 'children']);
 
     delete props.onToggle;
 
@@ -328,7 +321,7 @@ var Dropdown = function (_React$Component) {
             });
           case MENU_ROLE:
             return _this4.renderMenu(child, {
-              id: id, open: open, pullRight: pullRight, bsClass: bsClass, onClose: onClose, onSelect: onSelect, rootCloseEvent: rootCloseEvent
+              id: id, open: open, pullRight: pullRight, bsClass: bsClass, onSelect: onSelect, rootCloseEvent: rootCloseEvent
             });
           default:
             return child;

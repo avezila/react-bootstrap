@@ -5,9 +5,9 @@ import keycode from 'keycode';
 import React, { cloneElement } from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import all from 'react-prop-types/lib/all';
-import elementType from 'react-prop-types/lib/elementType';
-import isRequiredForA11y from 'react-prop-types/lib/isRequiredForA11y';
+import all from 'prop-types-extra/lib/all';
+import elementType from 'prop-types-extra/lib/elementType';
+import isRequiredForA11y from 'prop-types-extra/lib/isRequiredForA11y';
 import uncontrollable from 'uncontrollable';
 import warning from 'warning';
 
@@ -64,11 +64,6 @@ const propTypes = {
    * @controllable onToggle
    */
   open: PropTypes.bool,
-
-  /**
-   * A callback fired when the Dropdown closes.
-   */
-  onClose: PropTypes.func,
 
   /**
    * A callback fired when the Dropdown wishes to change visibility. Called with the requested
@@ -148,7 +143,7 @@ class Dropdown extends React.Component {
     }
 
     if (!open && prevOpen) {
-      // if focus hasn't already moved from the menu lets return it
+      // if focus hasn't already moved from the menu let's return it
       // to the toggle
       if (this._focusInDropdown) {
         this._focusInDropdown = false;
@@ -256,7 +251,7 @@ class Dropdown extends React.Component {
     });
   }
 
-  renderMenu(child, { id, onClose, onSelect, rootCloseEvent, ...props }) {
+  renderMenu(child, { id, onSelect, rootCloseEvent, ...props }) {
     let ref = c => { this.menu = c; };
 
     if (typeof child.ref === 'string') {
@@ -275,9 +270,7 @@ class Dropdown extends React.Component {
       labelledBy: id,
       bsClass: prefix(props, 'menu'),
       onClose: createChainedFunction(
-        child.props.onClose,
-        onClose,
-        this.handleClose,
+        child.props.onClose, this.handleClose,
       ),
       onSelect: createChainedFunction(
         child.props.onSelect,
@@ -296,7 +289,6 @@ class Dropdown extends React.Component {
       disabled,
       pullRight,
       open,
-      onClose,
       onSelect,
       role,
       bsClass,
@@ -335,7 +327,7 @@ class Dropdown extends React.Component {
               });
             case MENU_ROLE:
               return this.renderMenu(child, {
-                id, open, pullRight, bsClass, onClose, onSelect, rootCloseEvent,
+                id, open, pullRight, bsClass, onSelect, rootCloseEvent,
               });
             default:
               return child;
